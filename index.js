@@ -19,12 +19,17 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const usersCollection = client.db("nodeMongo").collection("users");
-    const user = {
-      name: "Sumi Akter",
-      vill: "Bogura",
-    };
-    const result = await usersCollection.insertOne(user);
-    console.log(result);
+
+    app.get("/users", async (req, res) => {
+      const cursor = await usersCollection.find({}).toArray();
+      res.send(cursor);
+    });
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      const result = await usersCollection.insertOne(user);
+      res.send(result);
+      console.log(result);
+    });
   } finally {
   }
 }
