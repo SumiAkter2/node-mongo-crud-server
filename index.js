@@ -26,7 +26,7 @@ async function run() {
     });
     app.get("/users/:id", async (req, res) => {
       const id = req.params.id;
-      const query = { _id:new ObjectId(id) };
+      const query = { _id: new ObjectId(id) };
       const cursor = await usersCollection.findOne(query);
       res.send(cursor);
     });
@@ -36,7 +36,26 @@ async function run() {
       res.send(result);
       console.log(result, user);
     });
-
+    app.put("/users/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const user = req.body;
+      const option = { upsert: true };
+      const updateUser = {
+        $set: {
+          name: user.name,
+          address: user.address,
+          email: user.email,
+        },
+      };
+      const result = await usersCollection.updateOne(
+        filter,
+        option,
+        updateUser
+      );
+      res.send(result);
+      console.log(result);
+    });
     app.delete("/users/:id", async (req, res) => {
       const id = req.params.id;
       // console.log('trying to delete', id);
