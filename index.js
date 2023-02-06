@@ -24,6 +24,12 @@ async function run() {
       const cursor = await usersCollection.find({}).toArray();
       res.send(cursor);
     });
+    app.get("/users/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id:new ObjectId(id) };
+      const cursor = await usersCollection.findOne(query);
+      res.send(cursor);
+    });
     app.post("/users", async (req, res) => {
       const user = req.body;
       const result = await usersCollection.insertOne(user);
@@ -34,7 +40,7 @@ async function run() {
     app.delete("/users/:id", async (req, res) => {
       const id = req.params.id;
       // console.log('trying to delete', id);
-      const query = { _id:new ObjectId(id) };
+      const query = { _id: new ObjectId(id) };
       const result = await usersCollection.deleteOne(query);
       console.log(result);
       res.send(result);
